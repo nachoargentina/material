@@ -20,7 +20,7 @@ function MdTabsController($scope, $element, $mdUtil, $$rAF) {
   self.indexOf = tabsList.indexOf;
   self.itemAt = tabsList.itemAt;
   self.count = tabsList.count;
-  
+
   self.getSelectedItem = getSelectedItem;
   self.getSelectedIndex = getSelectedIndex;
   self.add = add;
@@ -57,7 +57,7 @@ function MdTabsController($scope, $element, $mdUtil, $$rAF) {
 
     // Select the new tab if we don't have a selectedIndex, or if the
     // selectedIndex we've been waiting for is this tab
-    if ($scope.selectedIndex === -1 || !angular.isNumber($scope.selectedIndex) || 
+    if ($scope.selectedIndex === -1 || !angular.isNumber($scope.selectedIndex) ||
         $scope.selectedIndex === self.indexOf(tab)) {
       self.select(tab);
     }
@@ -99,11 +99,12 @@ function MdTabsController($scope, $element, $mdUtil, $$rAF) {
     if (!tab || tab.isSelected || tab.isDisabled()) return;
     if (!tabsList.contains(tab)) return;
 
-    self.deselect(self.getSelectedItem());
+    var rightToLeft = self.indexOf(tab) < $scope.selectedIndex;
+    self.deselect(self.getSelectedItem(), rightToLeft);
 
     $scope.selectedIndex = self.indexOf(tab);
     tab.isSelected = true;
-    tab.onSelect();
+    tab.onSelect(rightToLeft);
 
     $scope.$broadcast('$mdTabsChanged');
   }
@@ -113,13 +114,13 @@ function MdTabsController($scope, $element, $mdUtil, $$rAF) {
     self.tabToFocus = tab;
   }
 
-  function deselect(tab) {
+  function deselect(tab, rightToLeft) {
     if (!tab || !tab.isSelected) return;
     if (!tabsList.contains(tab)) return;
 
     $scope.selectedIndex = -1;
     tab.isSelected = false;
-    tab.onDeselect();
+    tab.onDeselect(rightToLeft);
   }
 
   function next(tab, filterFn) {
