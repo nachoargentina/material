@@ -99,6 +99,29 @@ describe('radioButton', function() {
     expect($rootScope.color).toEqual('green');
   }));
 
+  it('should trigger a submit', inject(function($compile, $rootScope, $mdConstant) {
+
+    $rootScope.submit = function(){};
+
+    var element = $compile('<div><form ng-submit="submit()">' +
+                            '<md-radio-group ng-model="color">' +
+                            '<md-radio-button value="white"></md-radio-button>' +
+                            '</md-radio-group>' +
+                          '</form></div>')($rootScope);
+
+    var formElement = element.find('form'),
+        rbGroupElement = element.find('md-radio-group');
+
+    spyOn($rootScope, 'submit');
+
+    rbGroupElement.triggerHandler({
+      type: 'keydown',
+      keyCode: $mdConstant.KEY_CODE.ENTER
+    });
+
+    expect($rootScope.submit).toHaveBeenCalled();
+  }));
+
   describe('ng core radio button tests', function() {
 
     it('should noop with no model', inject(function($compile, $rootScope) {

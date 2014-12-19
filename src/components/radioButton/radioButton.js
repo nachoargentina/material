@@ -73,6 +73,12 @@ function mdRadioGroupDirective($mdUtil, $mdConstant, $mdTheming) {
         ev.preventDefault();
         rgCtrl.selectNext();
       }
+      else if (ev.keyCode === $mdConstant.KEY_CODE.ENTER) {
+        var form = angular.element($mdUtil.getClosest(element[0], 'form'));
+        if (form.length > 0) {
+          form.triggerHandler('submit');
+        }
+      }
     }
 
     rgCtrl.init(ngModelCtrl);
